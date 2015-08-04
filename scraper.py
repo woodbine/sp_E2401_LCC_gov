@@ -73,7 +73,7 @@ for link in links:
         csvMth = convert_mth_strings(csvMth.upper())
         filename = entity_id + "_" + csvYr + "_" + csvMth
         todays_date = str(datetime.now())
-        file_url = 'http://www.rutland.gov.uk' + link['href']
+        file_url = 'http://www.leicester.gov.uk' + link['href']
         validFilename = validateFilename(filename)
         validURL, validFiletype = validateURL(file_url)
         if not validFilename:
