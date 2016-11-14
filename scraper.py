@@ -51,7 +51,7 @@ def validateURL(url):
         else:
             ext = os.path.splitext(url)[1]
         validURL = r.getcode() == 200
-        validFiletype = ext.lower() in ['.csv', '.xls', '.xlsx']
+        validFiletype = ext.lower() in ['.csv', '.xls', '.xlsx', '.ods']
         return validURL, validFiletype
     except:
         print ("Error validating URL.")
@@ -98,7 +98,7 @@ soup = BeautifulSoup(html, "lxml")
 
 #### SCRAPE DATA
 
-block = soup.find('span', text = re.compile('Spending')).find_next('ul')
+block = soup.find('h3', text = re.compile('Spending')).find_next('ul')
 links = block.findAll('a', href =True)
 for link in links:
    if 'Payments over' in link['title']:
