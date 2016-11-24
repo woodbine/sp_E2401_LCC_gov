@@ -101,7 +101,6 @@ soup = BeautifulSoup(html, "lxml")
 block = soup.find('h3', text = re.compile('Spending')).find_next('ul')
 links = block.findAll('a', href =True)
 for link in links:
-   if 'Payments over' in link['title']:
         csvfile = link.text.strip()
         url = 'http://www.leicester.gov.uk' + link['href']
         csvfiles = csvfile.split('-')[-1].strip().split(' ')
