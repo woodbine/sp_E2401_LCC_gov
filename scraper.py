@@ -86,9 +86,10 @@ def convert_mth_strings ( mth_string ):
 #### VARIABLES 1.0
 
 entity_id = "E2401_LCC_gov"
-url = "http://www.leicester.gov.uk/your-council/how-we-work/data-protection-and-foia/transparency-and-open-data"
+url = "http://directory.leicester.gov.uk/transparency-directory/?p=1&theme=14736&dataset=&month=&year=&frequencyPublished=&q="
 errors = 0
 data = []
+start_url = "http://directory.leicester.gov.uk/transparency-directory/?p={}&theme=14736&dataset=&month=&year=&frequencyPublished=&q="
 
 
 #### READ HTML 1.0
@@ -98,18 +99,18 @@ soup = BeautifulSoup(html, "lxml")
 
 #### SCRAPE DATA
 
-block = soup.find('h3', text = re.compile('Spending')).find_next('ul')
-links = block.findAll('a', href =True)
-for link in links:
-        csvfile = link.text.strip()
-        url = 'http://www.leicester.gov.uk' + link['href']
-        csvfiles = csvfile.split('-')[-1].strip().split(' ')
-        if len(csvfiles) == 1:
-           continue
-        csvYr = csvfiles[-1].strip()
-        csvMth = csvfiles[0].strip()[:3]
-        csvMth = convert_mth_strings(csvMth.upper())
-        data.append([csvYr, csvMth, url])
+for i in range(1, 5):
+    html = urllib2.urlopen(start_url.format(i))
+    soup = BeautifulSoup(html, "lxml")
+    blocks = soup.find('table', 'notmobile').find_all('tr')[1:]
+    for block in blocks:
+        if 'Payments over' in block.find_all('td')[1].find('a').text:
+            url = 'http://directory.leicester.gov.uk'+block.find_all('td')[1].find('a')['href']
+            csvMth = block.find_all('td')[2].text.strip()[:3]
+            csvYr = block.find_all('td')[3].text.strip()
+            csvMth = convert_mth_strings(csvMth.upper())
+            data.append([csvYr, csvMth, url])
+
 
 
 #### STORE DATA 1.0
